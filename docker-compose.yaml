@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  proxy:
+    build:
+      context: ../router
+    container_name: proxy
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+      # - "443:443"
+    restart: unless-stopped
+    networks: [net]
+
+    # frontend:
+    #   image: #
+    #   container_name: front
+    #   expose:
+    #     - "80"
+    #   restart: unless-stopped
+    #   networks: [net]
+
+    # beckend:
+    #   image:
+    #   container_name:
+    #   expose:
+    #     - "8000"
+    #   restart: unless-stopped
+    #   networks: [net]
+
+networks:
+  net:
+    driver: bridge
