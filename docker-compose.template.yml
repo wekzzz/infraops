@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  router:
+    build:
+      context: ./router
+    container_name: {{ .services.router.container_name }}
+    ports:
+      - "{{ .nginx.http_port }}:80"
+      - "{{ .nginx.https_port }}:443"
+    volumes:
+      - {{ .nginx.certs_path }}:/etc/nginx/certs:ro
+      - {{ .nginx.webroot_path }}:/var/www/certbot:ro
+    restart: unless-stopped
+    networks: [net]
+
+  certbot:
+    build:
+      context: ./certbot
+    container_name: {{ .services.certbot.container_name }}
+    environment:
+      - DOMAIN={{ .domain }}
+      - EMAIL={{ .email }}
+    volumes:
+      - {{ .nginx.certs_path }}:/etc/letsencrypt
+      - {{ .nginx.webroot_path }}:/var/www/certbot
+    networks: [net]
+
+networks:
+  net:
+    driver: bridge

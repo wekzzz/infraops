@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  router:
+    build:
+      context: ./router
+    container_name: router
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./volumes/certs:/etc/nginx/certs:ro
+      - ./volumes/certbot-www:/var/www/certbot:ro
+    restart: unless-stopped
+    networks: [net]
+
+  certbot:
+    build:
+      context: ./certbot
+    container_name: certbot
+    environment:
+      - DOMAIN=berkutsecurity.com
+      - EMAIL=contact@berkutsecurity.com
+    volumes:
+      - ./volumes/certs:/etc/letsencrypt
+      - ./volumes/certbot-www:/var/www/certbot
+    networks: [net]
+
+networks:
+  net:
+    driver: bridge

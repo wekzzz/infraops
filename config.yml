@@ -1,0 +1,24 @@
+domain: berkutsecurity.com
+email: contact@berkutsecurity.com
+
+server:
+  user: root
+  ip:   192.168.111.222
+  path: /
+
+nginx:
+  http_port: 80
+  https_port: 443
+  certs_path: ./volumes/certs
+  webroot_path: ./volumes/certbot-www
+
+services:
+  router:
+    container_name: router
+  certbot:
+    container_name: certbot
+  frontend:
+    container_name: frontend
+  backend:
+    container_name: backend
+
