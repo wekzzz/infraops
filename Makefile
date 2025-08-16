@@ -1,9 +1,19 @@
-CONFIG=config.yml
+CONFIG=../config.yml
 
-.PHONY: help deploy
+.PHONY: help render deploy
 
 help:
-	@echo "Deploy script"
+	@echo "🚀 Makefile команды:"
+	@echo "  make render   - сгенерировать docker-compose.yml"
+	@echo "  make cert     - сгенерировать cert"
+	@echo "  make deploy   - задеплоить проект"
+
+render:
+	@sudo sh ./scripts/compose.sh $(CONFIG)
+
+cert:
+	@sudo sh ./scripts/gencert.sh $(DOMAIN)
 
 deploy:
-	./scripts/deploy.sh $(config)
+	@sudo sh ./scripts/deploy.sh $(CONFIG)
+

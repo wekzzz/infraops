@@ -6,26 +6,31 @@ services:
       context: ./router
     container_name: router
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
+      - "8443:443"
     volumes:
       - ./volumes/certs:/etc/nginx/certs:ro
       - ./volumes/certbot-www:/var/www/certbot:ro
     restart: unless-stopped
     networks: [net]
 
-  certbot:
-    build:
-      context: ./certbot
-    container_name: certbot
-    environment:
-      - DOMAIN=berkutsecurity.com
-      - EMAIL=contact@berkutsecurity.com
-    volumes:
-      - ./volumes/certs:/etc/letsencrypt
-      - ./volumes/certbot-www:/var/www/certbot
+  
+
+  frontend:
+    image: nginx:alpine
+    container_name: frontend
+    command: sh -c "echo '<h1>Frontend stub</h1>' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+    expose: ["80"]
+    networks: [net]
+
+  backend:
+    image: nginx:alpine
+    container_name: backend
+    command: sh -c "echo '{\"status\":\"ok\"}' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+    expose: ["8000"]
     networks: [net]
 
 networks:
   net:
     driver: bridge
+

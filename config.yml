@@ -1,5 +1,7 @@
-domain: berkutsecurity.com
-email: contact@berkutsecurity.com
+domain: example.com
+email: mail@example.com
+
+mode: dev            # dev | prod
 
 server:
   user: root
@@ -7,10 +9,13 @@ server:
   path: /
 
 nginx:
-  http_port: 80
-  https_port: 443
+  http_port: 8080    # dev: чтобы не биться с локальным :80
+  https_port: 8443   # dev: чтобы не биться с локальным :443
   certs_path: ./volumes/certs
   webroot_path: ./volumes/certbot-www
+
+features:
+  certbot_enabled: false   # dev=false, prod=true
 
 services:
   router:
