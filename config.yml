@@ -1,7 +1,7 @@
-domain: example.com
+domain: tandem.websales.app
 email: mail@example.com
 
-mode: dev            # dev | prod
+mode: prod           # dev | prod
 
 server:
   user: root
@@ -11,15 +11,17 @@ server:
 nginx:
   http_port: 8080    # dev: чтобы не биться с локальным :80
   https_port: 8443   # dev: чтобы не биться с локальным :443
-  certs_path: ./volumes/certs
-  webroot_path: ./volumes/certbot-www
+  certs_path: ./certbot/certs
+  webroot_path: ./certbot/certbot-www
 
 features:
-  certbot_enabled: false   # dev=false, prod=true
+  certbot_enabled: true   # dev=false, prod=true
 
 services:
   router:
     container_name: router
+  static:
+    container_name: static
   certbot:
     container_name: certbot
   frontend:
