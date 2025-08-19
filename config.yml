@@ -1,8 +1,6 @@
 domain: tandem.websales.app
 email: mail@example.com
 
-mode: prod           # dev | prod
-
 server:
   user: root
   ip:   192.168.111.222
@@ -11,21 +9,6 @@ server:
 nginx:
   http_port: 8080    # dev: чтобы не биться с локальным :80
   https_port: 8443   # dev: чтобы не биться с локальным :443
-  certs_path: ./certbot/certs
-  webroot_path: ./certbot/certbot-www
-
-features:
-  certbot_enabled: true   # dev=false, prod=true
-
-services:
-  router:
-    container_name: router
-  static:
-    container_name: static
-  certbot:
-    container_name: certbot
-  frontend:
-    container_name: frontend
-  backend:
-    container_name: backend
+  certs_path: ./ssl/certs
+  webroot_path: ./ssl/certbot-www
 

@@ -1,57 +1,23 @@
 version: "3.9"
 
 services:
-  router:
+  edge:
     build:
-      context: ./router
-    container_name: {{ .services.router.container_name }}
+      context: ./edge
     ports:
-      - "{{ .nginx.http_port }}:80"
-      - "{{ .nginx.https_port }}:443"
-    volumes:
-      - {{ .nginx.certs_path }}:/etc/nginx/certs:ro
-      - {{ .nginx.webroot_path }}:/var/www/certbot:ro
+      - "80:80"
+      - "443:443"
+    # volumes:
+      # - :/etc/nginx/certs:ro
+      # - :/var/www/certbot:ro
     restart: unless-stopped
     networks: [net]
 
-  static:
-    image: nginx:alpine
-    container_name: {{ .services.router.container_name }}
+  cdn:
+    build:
+      context: ./cdn
     expose:
       - "80"
-    volumes:
-      # - ./frontend/dist:/usr/share/nginx/html:ro                # билд фронта
-      # - ./devops/static/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    restart: unless-stopped
-    networks: [net]
-
-  {{ if .features.certbot_enabled }}
-  certbot:
-    build:
-      context: ./certbot
-    container_name: {{ .services.certbot.container_name }}
-    environment:
-      - DOMAIN={{ .domain }}
-      - EMAIL={{ .email }}
-      - MODE={{ .mode }}
-    volumes:
-      - {{ .nginx.certs_path }}:/etc/letsencrypt
-      - {{ .nginx.webroot_path }}:/var/www/certbot
-    networks: [net]
-  {{ end }}
-
-  frontend:
-    image: nginx:alpine
-    container_name: {{ .services.frontend.container_name }}
-    command: sh -c "echo '<h1>Frontend stub</h1>' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
-    expose: ["80"]
-    networks: [net]
-
-  backend:
-    image: nginx:alpine
-    container_name: {{ .services.backend.container_name }}
-    command: sh -c "echo '{\"status\":\"ok\"}' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
-    expose: ["8000"]
     networks: [net]
 
 networks:
